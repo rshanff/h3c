@@ -68,6 +68,9 @@ STATIC INFO_FUNC_S g_astInfoFunc[] =
     [INFO_MENU_CLOSE_DEBUG] = {"Close debug",   INFO_proc_CloseDebug}
 };
 
+/* the head point of all INFO_CFG_S */
+extern INFO_CFG_S* pstCfghead;
+
 /*****************************************************************************
     Func Name: info_main_DisplayMenu
  Date Created: 2011-12-29
