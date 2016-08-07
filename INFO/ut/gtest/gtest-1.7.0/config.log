@@ -532,7 +532,7 @@ conftest.c:29:22: warning: null argument where non-null required (argument 1) [-
                       pthread_create(0,0,0,0); pthread_cleanup_pop(0);
                       ^
 conftest.c:29:22: warning: null argument where non-null required (argument 3) [-Wnonnull]
-/tmp/ccbQFh0n.o: In function `main':
+/tmp/cch2Md6y.o: In function `main':
 /home/lifan/Desktop/project/INFO/ut/gtest/gtest-1.7.0/conftest.c:27: undefined reference to `pthread_join'
 /home/lifan/Desktop/project/INFO/ut/gtest/gtest-1.7.0/conftest.c:28: undefined reference to `__pthread_register_cancel'
 /home/lifan/Desktop/project/INFO/ut/gtest/gtest-1.7.0/conftest.c:29: undefined reference to `pthread_create'

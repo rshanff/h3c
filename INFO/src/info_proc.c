@@ -21,6 +21,7 @@ extern "C"{
 #endif
 
 /* standard library */
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,9 +34,11 @@ extern "C"{
 /* module   private */
 #include "info_dbg.h"
 #include "info.h"
+#include "info_data.h"
+#include "info_parse.h"
 
 /* the head&tail point of pstCfg in info_data.c */
-extern INFO_CFG_S* pstCfghead;
+extern INFO_CFG_S* g_pstCfghead;
 
 /*****************************************************************************
     Func Name: INFO_proc_Display[*]
@@ -66,7 +69,7 @@ ULONG INFO_proc_Display(IN const CHAR *pcInputStr)
         return ERROR_SUCCESS;
     }
     printf("id     name            sex age height\n");
-    for(pstCfgtemp = pstCfghead; pstCfgtemp != NULL; pstCfgtemp = pstCfgtemp->pstCfgnext)
+    for(pstCfgtemp = g_pstCfghead; pstCfgtemp != NULL; pstCfgtemp = pstCfgtemp->pstCfgnext)
     {
         printf("%-7u%-16s%-4u%-4u%u\n", pstCfgtemp->uiId,
                                     pstCfgtemp->szName,
@@ -97,21 +100,21 @@ ULONG INFO_proc_Display(IN const CHAR *pcInputStr)
 *****************************************************************************/
 ULONG INFO_proc_Add(IN const CHAR *pcInputStr)
 {
-    if(pstCfghead == NULL)
+    if(g_pstCfghead == NULL)
     {
-        pstCfghead = (INFO_CFG_S*)malloc(sizeof(INFO_CFG_S));
-        if(pstCfghead == NULL)
+        g_pstCfghead = (INFO_CFG_S*)malloc(sizeof(INFO_CFG_S));
+        if(g_pstCfghead == NULL)
         {
             return ERROR_NO_ENOUGH_RESOURCE;
         }
-        INFO_parse_InputStr(pcInputStr, pstCfghead);
-        if(!INFO_ALL_ISVALID(pstCfghead))
+        INFO_parse_InputStr(pcInputStr, g_pstCfghead);
+        if(!INFO_ALL_ISVALID(g_pstCfghead))
         {
-            free(pstCfghead);
-            pstCfghead = NULL;
+            free(g_pstCfghead);
+            g_pstCfghead = NULL;
             return ERROR_INVALID_PARAMETER;
         }
-        pstCfghead->pstCfgnext = NULL;
+        g_pstCfghead->pstCfgnext = NULL;
     }
     else
     {
@@ -136,11 +139,11 @@ ULONG INFO_proc_Add(IN const CHAR *pcInputStr)
         pstCfgmem->pstCfgnext = NULL;
 
         /* find the right position to insert the point */
-        INFO_CFG_S* pstCfgtemp = pstCfghead;
-        if(pstCfghead->uiId > pstCfgmem->uiId)
+        INFO_CFG_S* pstCfgtemp = g_pstCfghead;
+        if(g_pstCfghead->uiId > pstCfgmem->uiId)
         {
-            pstCfgmem->pstCfgnext = pstCfghead;
-            pstCfghead = pstCfgmem;
+            pstCfgmem->pstCfgnext = g_pstCfghead;
+            g_pstCfghead = pstCfgmem;
         }
         else
         {
@@ -192,16 +195,16 @@ ULONG INFO_proc_Delete(IN const CHAR *pcInputStr)
     }
 
     /* info is sorted */
-    if(pstCfghead->uiId > uiId)
+    if(g_pstCfghead->uiId > uiId)
     {
         return ERROR_NOT_FOUND;
     }
-    if(pstCfghead->uiId == uiId)
+    if(g_pstCfghead->uiId == uiId)
     {
-        pstCfghead = pstCfghead->pstCfgnext;
+        g_pstCfghead = g_pstCfghead->pstCfgnext;
         return ERROR_SUCCESS;
     }
-    for(pstCfgtemp = pstCfghead; pstCfgtemp->pstCfgnext != NULL; pstCfgtemp = pstCfgtemp->pstCfgnext)
+    for(pstCfgtemp = g_pstCfghead; pstCfgtemp->pstCfgnext != NULL; pstCfgtemp = pstCfgtemp->pstCfgnext)
     {
         if(uiId < pstCfgtemp->pstCfgnext->uiId)
         {
@@ -262,7 +265,7 @@ ULONG INFO_proc_Modify(IN const CHAR *pcInputStr)
     }
 
     /* search */
-    for(pstCfgtemp = pstCfghead; pstCfgtemp != NULL; pstCfgtemp = pstCfgtemp->pstCfgnext)
+    for(pstCfgtemp = g_pstCfghead; pstCfgtemp != NULL; pstCfgtemp = pstCfgtemp->pstCfgnext)
     {
         if(pstCfgtemp->uiId == pstCfgmem->uiId)
         {
